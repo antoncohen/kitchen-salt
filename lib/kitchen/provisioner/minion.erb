@@ -1,3 +1,6 @@
+<% if defined?(salt_minion_config_contents) %>
+<%= salt_minion_config_contents %>
+<% else %>
 state_top: top.sls
 
 file_client: local
@@ -9,3 +12,4 @@ file_roots:
 pillar_roots:
  <%= config[:salt_env] %>:
    - <%= File.join(config[:root_path], config[:salt_pillar_root]) %>
+<% end %>

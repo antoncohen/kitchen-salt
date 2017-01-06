@@ -46,6 +46,7 @@ module Kitchen
         chef_bootstrap_url: 'https://www.getchef.com/chef/install.sh',
         salt_config: '/etc/salt',
         salt_minion_config: '/etc/salt/minion',
+        salt_minion_config_contents: {},
         salt_env: 'base',
         salt_file_root: '/srv/salt',
         salt_pillar_root: '/srv/pillar',
@@ -172,6 +173,10 @@ module Kitchen
       def prepare_minion
         info('Preparing salt-minion')
 
+        if config[:salt_minion_config_contents] && !config[:salt_minion_config_contents].empty?
+          unsymbolize_minion_config = unsymbolize(config[:salt_minion_config_contents])
+          salt_minion_config_contents = unsymbolize_minion_config.to_yaml
+        end
         minion_template = File.expand_path("./../minion.erb", __FILE__)
 
         minion_config_content = ERB.new(File.read(minion_template)).result(binding)
